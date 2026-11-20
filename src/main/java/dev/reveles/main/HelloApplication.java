@@ -17,10 +17,11 @@ public class HelloApplication extends Application
 
         MainWindow window = new MainWindow(controller);
 
-        Scene scene = new Scene(window.getRoot(), 950, 600);
+        Scene scene = new Scene(window.getRoot(), 975, 640);
 
-        stage.setTitle("Yu-Gi-Oh!");
+        stage.setTitle("Yu-Gi-Oh! Viewer");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
