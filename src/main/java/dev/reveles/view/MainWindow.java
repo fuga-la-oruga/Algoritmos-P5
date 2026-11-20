@@ -134,14 +134,14 @@ public class MainWindow
 
         HBox imageBox = new HBox(20);
         imageBox.setAlignment(Pos.BOTTOM_CENTER);
-        imageBox.setPadding(new Insets(0, 0, 20, 0));
+        imageBox.setPadding(new Insets(0, 0, 10, 0));
 
         prevImageView = new ImageView();
         prevImageView.setFitWidth(100);
         prevImageView.setPreserveRatio(true);
 
         currentImageView = new ImageView();
-        currentImageView.setFitHeight(350);
+        currentImageView.setFitHeight(330);
         currentImageView.setPreserveRatio(true);
 
         nextImageView = new ImageView();
@@ -180,6 +180,10 @@ public class MainWindow
         descLabel.setStyle("-fx-text-fill: #CCCCCC; -fx-font-size: 12px;");
         descLabel.setWrapText(true);
         descLabel.setTextAlignment(TextAlignment.JUSTIFY);
+
+        descLabel.setMinHeight(100);
+        descLabel.setMaxHeight(100);
+        descLabel.setAlignment(Pos.TOP_LEFT);
 
         infoBox.getChildren().addAll(nameLabel, separator, statLabel, descLabel);
 
