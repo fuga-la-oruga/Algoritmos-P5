@@ -14,6 +14,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.io.File;
+import java.util.HashMap;
 
 public class MainWindow
 {
@@ -32,11 +33,13 @@ public class MainWindow
     private Label indexLabel;
 
     private MediaPlayer mediaPlayer;
+    private HashMap<String, Image> imageCache;
 
     // ------------------------------
     public MainWindow(CardController controller)
     {
         this.controller = controller;
+        this.imageCache = new java.util.HashMap<>();
         this.root = new BorderPane();
         this.root.setStyle("-fx-background-color: #4A4A4A; -fx-font-family: 'Segoe UI', Arial, sans-serif;");
 
@@ -69,7 +72,8 @@ public class MainWindow
         }
     }
 
-    private void buildLeftMenu() {
+    private void buildLeftMenu()
+    {
         VBox menu = new VBox(25);
         menu.setPadding(new Insets(20));
         menu.setStyle("-fx-background-color: #383838; -fx-border-color: #5A5A5A; -fx-border-width: 0 3 0 0;");
@@ -270,7 +274,7 @@ public class MainWindow
 
     private void updateView()
     {
-        if (currentNode == null)
+        if(currentNode == null)
         {
             return;
         }
@@ -281,9 +285,9 @@ public class MainWindow
 
         try
         {
-            currentImageView.setImage(new Image(currentCard.getImageUrl(), true));
-            prevImageView.setImage(new Image(prevCard.getImageUrl(), true));
-            nextImageView.setImage(new Image(nextCard.getImageUrl(), true));
+            currentImageView.setImage(getCardImage(currentCard));
+            prevImageView.setImage(getCardImage(prevCard));
+            nextImageView.setImage(getCardImage(nextCard));
         }
         catch(Exception e)
         {
@@ -292,14 +296,54 @@ public class MainWindow
 
         indexLabel.setText(currentIndex + " / " + currentList.getSize());
         nameLabel.setText(currentCard.getName());
-        statLabel.setText
-        (
-            currentCard.getAttribute() +
-            " | Level " + currentCard.getLevel() +
-            " | " + currentCard.getType() +
-            " | ATK " + currentCard.getAtk() +
-            " | DEF " + currentCard.getDef()
-        );
+        statLabel.setText(currentCard.getAttribute() + " | Level " + currentCard.getLevel() + " | " +
+                currentCard.getType() + " | ATK " + currentCard.getAtk() + " | DEF " + currentCard.getDef());
         descLabel.setText(currentCard.getDescription());
+
+        preloadNearby(currentNode);
+    }
+
+    private void preloadNearby(Node<Card> centerNode)
+    {
+        if(centerNode == null)
+        {
+            return;
+        }
+
+        Node<Card> forward = centerNode.getNext();
+        Node<Card> backward = centerNode.getPrev();
+
+        for(int i = 0; i < 5; i ++)
+        {
+            if(forward != null)
+            {
+                String fUrl = forward.getInfo().getImageUrl();
+                if(!imageCache.containsKey(fUrl))
+                {
+                    imageCache.put(fUrl, new Image(fUrl, true));
+                }
+                forward = forward.getNext();
+            }
+
+            if(backward != null)
+            {
+                String bUrl = backward.getInfo().getImageUrl();
+                if(!imageCache.containsKey(bUrl))
+                {
+                    imageCache.put(bUrl, new Image(bUrl, true));
+                }
+                backward = backward.getPrev();
+            }
+        }
+    }
+
+    private Image getCardImage(Card card)
+    {
+        String url = card.getImageUrl();
+        if(!imageCache.containsKey(url))
+        {
+            imageCache.put(url, new Image(url, true));
+        }
+        return imageCache.get(url);
     }
 }
