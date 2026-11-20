@@ -11,6 +11,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
 
 public class MainWindow
 {
@@ -28,12 +31,16 @@ public class MainWindow
     private Label descLabel;
     private Label indexLabel;
 
+    private MediaPlayer mediaPlayer;
+
     // ------------------------------
     public MainWindow(CardController controller)
     {
         this.controller = controller;
         this.root = new BorderPane();
         this.root.setStyle("-fx-background-color: #4A4A4A; -fx-font-family: 'Segoe UI', Arial, sans-serif;");
+
+        setupAudio("src/main/resources/dev/reveles/Yu-Gi-Oh Dark God Revival Theme Japanese version.mp3");
 
         buildLeftMenu();
         buildRightViewer();
@@ -47,8 +54,22 @@ public class MainWindow
         return root;
     }
 
-    private void buildLeftMenu()
+    private void setupAudio(String filePath)
     {
+        try
+        {
+            Media media = new Media(new File(filePath).toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.play();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error al cargar la musica");
+        }
+    }
+
+    private void buildLeftMenu() {
         VBox menu = new VBox(25);
         menu.setPadding(new Insets(20));
         menu.setStyle("-fx-background-color: #383838; -fx-border-color: #5A5A5A; -fx-border-width: 0 3 0 0;");
@@ -64,8 +85,7 @@ public class MainWindow
         btnLevel.setMaxWidth(Double.MAX_VALUE);
         btnLevel.setStyle("-fx-background-color: #2B2B2B; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px;");
         ComboBox<Integer> comboLevel = new ComboBox<>();
-        for(int i = 1; i <= 12; i ++)
-        {
+        for (int i = 1; i <= 12; i++) {
             comboLevel.getItems().add(i);
         }
         comboLevel.getSelectionModel().selectFirst();
@@ -108,16 +128,26 @@ public class MainWindow
         soundBox.setAlignment(Pos.CENTER_LEFT);
         Label lblSound = new Label("Musica");
         lblSound.setStyle("-fx-text-fill: #E0E0E0; -fx-font-size: 14px; -fx-font-weight: bold;");
-        ToggleButton btnSound = new ToggleButton("OFF");
+        ToggleButton btnSound = new ToggleButton("ON");
+        btnSound.setSelected(true);
         btnSound.setStyle("-fx-background-color: #2B2B2B; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnSound.setOnAction(e -> {
-            if(btnSound.isSelected())
+        btnSound.setOnAction(e ->
+        {
+            if (btnSound.isSelected())
             {
                 btnSound.setText("ON");
+                if (mediaPlayer != null)
+                {
+                    mediaPlayer.play();
+                }
             }
             else
             {
                 btnSound.setText("OFF");
+                if (mediaPlayer != null)
+                {
+                    mediaPlayer.pause();
+                }
             }
         });
         soundBox.getChildren().addAll(lblSound, btnSound);
@@ -180,9 +210,8 @@ public class MainWindow
         descLabel.setStyle("-fx-text-fill: #CCCCCC; -fx-font-size: 12px;");
         descLabel.setWrapText(true);
         descLabel.setTextAlignment(TextAlignment.JUSTIFY);
-
-        descLabel.setMinHeight(100);
-        descLabel.setMaxHeight(100);
+        descLabel.setMinHeight(85);
+        descLabel.setMaxHeight(85);
         descLabel.setAlignment(Pos.TOP_LEFT);
 
         infoBox.getChildren().addAll(nameLabel, separator, statLabel, descLabel);
@@ -191,10 +220,9 @@ public class MainWindow
         root.setCenter(viewer);
     }
 
-    private void loadList(CircularList<Card> list)
-    {
+    private void loadList(CircularList<Card> list) {
         currentList = list;
-        if(!currentList.isEmpty())
+        if (!currentList.isEmpty())
         {
             currentNode = currentList.getHead();
             currentIndex = 1;
@@ -214,11 +242,11 @@ public class MainWindow
 
     private void goNext()
     {
-        if(currentNode != null)
+        if (currentNode != null)
         {
             currentNode = currentNode.getNext();
             currentIndex ++;
-            if(currentIndex > currentList.getSize())
+            if (currentIndex > currentList.getSize())
             {
                 currentIndex = 1;
             }
@@ -228,11 +256,11 @@ public class MainWindow
 
     private void goPrevious()
     {
-        if(currentNode != null)
+        if (currentNode != null)
         {
             currentNode = currentNode.getPrev();
-            currentIndex --;
-            if(currentIndex < 1)
+            currentIndex--;
+            if (currentIndex < 1)
             {
                 currentIndex = currentList.getSize();
             }
@@ -242,7 +270,7 @@ public class MainWindow
 
     private void updateView()
     {
-        if(currentNode == null)
+        if (currentNode == null)
         {
             return;
         }
@@ -264,8 +292,14 @@ public class MainWindow
 
         indexLabel.setText(currentIndex + " / " + currentList.getSize());
         nameLabel.setText(currentCard.getName());
-        statLabel.setText(currentCard.getAttribute() + " | Level " + currentCard.getLevel() + " | " +
-                currentCard.getType() + " | ATK " + currentCard.getAtk() + " | DEF " + currentCard.getDef());
+        statLabel.setText
+        (
+            currentCard.getAttribute() +
+            " | Level " + currentCard.getLevel() +
+            " | " + currentCard.getType() +
+            " | ATK " + currentCard.getAtk() +
+            " | DEF " + currentCard.getDef()
+        );
         descLabel.setText(currentCard.getDescription());
     }
 }
