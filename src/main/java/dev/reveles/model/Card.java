@@ -6,35 +6,36 @@ public class Card
     private String attribute;
     private int level;
     private String type;
-    private int attack;
-    private int defense;
+    private int atk;
+    private int def;
+    private String rarity;
     private String description;
-    private String imageUrl;
+    private String id;
 
     // ------------------------------
-
     public Card
     (
         String name,
         String attribute,
         int level,
         String type,
-        int attack,
-        int defense,
+        int atk,
+        int def,
+        String rarity,
         String description,
-        String imageUrl
+        String id
     )
     {
         this.name = name;
         this.attribute = attribute;
         this.level = level;
         this.type = type;
-        this.attack = attack;
-        this.defense = defense;
+        this.atk = atk;
+        this.def = def;
+        this.rarity = rarity;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.id = id;
     }
-
     // ------------------------------
 
     public String getName()
@@ -57,14 +58,19 @@ public class Card
         return type;
     }
 
-    public int getAttack()
+    public int getAtk()
     {
-        return attack;
+        return atk;
     }
 
-    public int getDefense()
+    public int getDef()
     {
-        return defense;
+        return def;
+    }
+
+    public String getRarity()
+    {
+        return rarity;
     }
 
     public String getDescription()
@@ -72,8 +78,13 @@ public class Card
         return description;
     }
 
+    public String getId()
+    {
+        return id;
+    }
+
     public String getImageUrl()
     {
-        return imageUrl;
+        return "https://images.ygoprodeck.com/images/cards/" + id + ".jpg";
     }
 }
