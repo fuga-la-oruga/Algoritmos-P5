@@ -228,7 +228,7 @@ public class MainWindow
         currentList = list;
         if (!currentList.isEmpty())
         {
-            currentNode = currentList.getHead();
+            currentNode = currentList.getStart();
             currentIndex = 1;
             updateView();
         }

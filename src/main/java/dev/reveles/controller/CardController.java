@@ -89,7 +89,7 @@ public class CardController
             return filteredList;
         }
 
-        Node<Card> current = allCards.getHead();
+        Node<Card> current = allCards.getStart();
         for(int i = 0; i < allCards.getSize(); i ++)
         {
             if(current.getInfo().getLevel() == level)
@@ -109,7 +109,7 @@ public class CardController
             return filteredList;
         }
 
-        Node<Card> current = allCards.getHead();
+        Node<Card> current = allCards.getStart();
         for(int i = 0; i < allCards.getSize(); i ++)
         {
             if(current.getInfo().getAttribute().equalsIgnoreCase(attribute))
@@ -129,7 +129,7 @@ public class CardController
             return new CircularList<>();
         }
 
-        Node<Card> current = allCards.getHead();
+        Node<Card> current = allCards.getStart();
         for(int i = 0; i < allCards.getSize(); i ++)
         {
             tempList.add(current.getInfo());
@@ -161,7 +161,7 @@ public class CardController
             return new CircularList<>();
         }
 
-        Node<Card> current = allCards.getHead();
+        Node<Card> current = allCards.getStart();
         for(int i = 0; i < allCards.getSize(); i ++)
         {
             tempList.add(current.getInfo());

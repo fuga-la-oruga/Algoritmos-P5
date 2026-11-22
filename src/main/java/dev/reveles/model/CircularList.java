@@ -2,15 +2,15 @@ package dev.reveles.model;
 
 public class CircularList<T>
 {
-    private Node<T> head;
-    private Node<T> tail;
+    private Node<T> start;
+    private Node<T> end;
     private int size;
 
     // ------------------------------
     public CircularList()
     {
-        this.head = null;
-        this.tail = null;
+        this.start = null;
+        this.end = null;
         this.size = 0;
     }
     // ------------------------------
@@ -25,9 +25,9 @@ public class CircularList<T>
         return size;
     }
 
-    public Node<T> getHead()
+    public Node<T> getStart()
     {
-        return head;
+        return start;
     }
 
     public void insertAtStart(T info)
@@ -35,16 +35,16 @@ public class CircularList<T>
         Node<T> newNode = new Node<>(info);
         if(isEmpty())
         {
-            head = newNode;
-            tail = newNode;
+            start = newNode;
+            end = newNode;
         }
         else
         {
-            newNode.setNext(head);
-            newNode.setPrev(tail);
-            head.setPrev(newNode);
-            tail.setNext(newNode);
-            head = newNode;
+            newNode.setNext(start);
+            newNode.setPrev(end);
+            start.setPrev(newNode);
+            end.setNext(newNode);
+            start = newNode;
         }
         size ++;
     }
@@ -54,16 +54,16 @@ public class CircularList<T>
         Node<T> newNode = new Node<>(info);
         if(isEmpty())
         {
-            head = newNode;
-            tail = newNode;
+            start = newNode;
+            end = newNode;
         }
         else
         {
-            newNode.setPrev(tail);
-            newNode.setNext(head);
-            tail.setNext(newNode);
-            head.setPrev(newNode);
-            tail = newNode;
+            newNode.setPrev(end);
+            newNode.setNext(start);
+            end.setNext(newNode);
+            start.setPrev(newNode);
+            end = newNode;
         }
         size ++;
     }
@@ -75,18 +75,18 @@ public class CircularList<T>
             return null;
         }
 
-        T removedInfo = head.getInfo();
+        T removedInfo = start.getInfo();
 
         if(size == 1)
         {
-            head = null;
-            tail = null;
+            start = null;
+            end = null;
         }
         else
         {
-            head = head.getNext();
-            head.setPrev(tail);
-            tail.setNext(head);
+            start = start.getNext();
+            start.setPrev(end);
+            end.setNext(start);
         }
         size --;
         return removedInfo;
@@ -99,18 +99,18 @@ public class CircularList<T>
             return null;
         }
 
-        T removedInfo = tail.getInfo();
+        T removedInfo = end.getInfo();
 
         if(size == 1)
         {
-            head = null;
-            tail = null;
+            start = null;
+            end = null;
         }
         else
         {
-            tail = tail.getPrev();
-            tail.setNext(head);
-            head.setPrev(tail);
+            end = end.getPrev();
+            end.setNext(start);
+            start.setPrev(end);
         }
         size --;
         return removedInfo;
@@ -123,7 +123,7 @@ public class CircularList<T>
             return null;
         }
 
-        Node<T> current = head;
+        Node<T> current = start;
         for(int i = 0; i < index; i ++)
         {
             current = current.getNext();
